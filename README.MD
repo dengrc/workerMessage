@@ -7,5 +7,5 @@
 ### install
 
 ```shell
-npm install workermessage
+npm install worker-request-message
 ```
