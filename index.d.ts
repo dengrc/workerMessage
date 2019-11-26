@@ -6,18 +6,18 @@ export default class WorkerMessage {
      * @param resolve 解决请求回调
      * @param reject 拒绝请求回调
      */
-    onRequestMessage(message: any, resolve: (message: any) => void, reject: (message: any) => void)
+    onRequestMessage(message: any, resolve: (message: any) => void, reject: (message: any) => void):void
     /**
      * 实例对象实现方法
      * 接收到普通消息
      * @param message 消息内容
      * @param e 消息事件对象
      */
-    onMessage(message: any, e: MessageEvent)
+    onMessage(message: any, e: MessageEvent):void
     /**
      * 结束消息监听
      */
-    destroy()
+    destroy():void
     /**
      * 消息管理
      * @author 邓如春 <dengrc1992@gmail.com>
@@ -31,12 +31,12 @@ export default class WorkerMessage {
      * 发送请求消息，并等待响应
      * @param message 消息内容
      */
-    requestMessage(message: any)
+    requestMessage(message: any):Promise<any>
     /**
      * 发送普通消息
      * @param message 消息内容
      * @param transfer 
      * @param targetOrigin 默认使用构造函数传入的 origin 值
      */
-    postMessage(message: any, transfer?: Transferable, targetOrigin?: string)
+    postMessage(message: any, transfer?: Transferable, targetOrigin?: string):void
 }

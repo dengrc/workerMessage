@@ -1,6 +1,6 @@
 {
   "name": "worker-request-message",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "使用Promise为Worker，iframe，New tab Window 的 postMessage包装。 使postMessage变得容易；Use Promise as the postMessage wrapper for Worker, iframe, New tab Window. Make postMessage easy",
   "main": "index.js",
   "scripts": {
