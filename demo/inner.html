@@ -1,0 +1,14 @@
+<script type="module">
+    import WorkerMessage from "../index.js";
+
+    const message = new WorkerMessage(self);
+    message.onRequestMessage = function (message, resolve, reject) {
+        resolve(message + "; iframe response")
+    }
+
+    message.requestMessage("to parent").then((e) => {
+        console.log(e)
+    }).catch((e) => {
+        console.error(e)
+    })
+</script>

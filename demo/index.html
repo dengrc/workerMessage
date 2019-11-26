@@ -1,0 +1,34 @@
+<script type="module">
+    import WorkerMessage from "../index.js";
+
+    const worker = new Worker("./worker.js");//,{type:'module'}
+
+    const message = new WorkerMessage(worker);
+    message.onRequestMessage = function (message, resolve, reject) {
+        resolve(message + "; main response")
+    }
+
+    message.requestMessage("to worker").then((e) => {
+        console.log(e)
+    }).catch((e) => {
+        console.error(e)
+    })
+</script>
+
+<iframe src="./inner.html" id="innerIframe"></iframe>
+<script type="module">
+    import WorkerMessage from "../index.js";
+
+    innerIframe.addEventListener("load", (e) => {
+        const message = new WorkerMessage(innerIframe.contentWindow);
+        message.onRequestMessage = function (message, resolve, reject) {
+            resolve(message + "; parent response")
+        }
+
+        message.requestMessage("to iframe").then((e) => {
+            console.log(e)
+        }).catch((e) => {
+            console.error(e)
+        })
+    }, false)
+</script>
