@@ -33,7 +33,7 @@ class WorkerMessage {
             this.postMessage({
                 type: "loaded"
             })
-        }, 50);
+        }, 150);
         const messageHandler = (e) => {
             if (origin !== "" && origin !== "*" && e.origin !== origin) {
                 return
