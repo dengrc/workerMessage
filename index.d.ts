@@ -24,9 +24,9 @@ export default class WorkerMessage {
      * @see [Window](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage#Syntax)
      * @see [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage#Syntax)
      * @param target 用于发送或接收消息的对象 worker、iframe.contentWindow 或 iframe 里的 window
-     * @param origin  target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
+     * @param targetOrigin  target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
      */
-    constructor(target: Window | Worker, origin?: string)
+    constructor(target: Window | Worker, targetOrigin?: string)
     /**
      * 发送请求消息，并等待响应
      * @param message 消息内容
@@ -36,7 +36,7 @@ export default class WorkerMessage {
      * 发送普通消息
      * @param message 消息内容
      * @param transfer 
-     * @param targetOrigin 默认使用构造函数传入的 origin 值
+     * @param targetOrigin 默认使用构造函数传入的 targetOrigin 值
      */
     postMessage(message: any, transfer?: Transferable, targetOrigin?: string):void
 }

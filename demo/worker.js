@@ -1,3 +1,4 @@
+//WebWorker
 importScripts("../index.inworker.js")
 const message = new WorkerMessage(self);
 

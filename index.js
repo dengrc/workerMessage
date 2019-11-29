@@ -24,23 +24,26 @@ class WorkerMessage {
      * @see [Window](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage#Syntax)
      * @see [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage#Syntax)
      * @param {Window|Worker} target 用于发送或接收消息的对象 worker、iframe.contentWindow 或 iframe 里的 window
-     * @param {string} [origin=*] target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
+     * @param {string} [targetOrigin=*] target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
      */
-    constructor(target, origin = "*") {
+    constructor(target, targetOrigin = "*") {
         let resolvePromise;
+        let resolved = false;
         const promiseMap = this.__messagePromiseMap = new Map();
-        const timer = setTimeout(() => {
+        const broadLoaded = () => {
             this.postMessage({
                 type: "loaded"
-            })
-        }, 150);
+            });
+        };
         const messageHandler = (e) => {
-            if (origin !== "" && origin !== "*" && e.origin !== origin) {
+            if (targetOrigin !== "" && targetOrigin !== "*" && e.origin !== targetOrigin) {
                 return
             }
             const data = e.data;
             if (data) {
-                if (data.type === "loaded") {
+                if (data.type === "loaded" && !resolved) {
+                    resolved = true;
+                    broadLoaded();
                     return resolvePromise(1);
                 }
                 if (data.__requestID__) {
@@ -69,7 +72,7 @@ class WorkerMessage {
         };
         this.__isWorker = (typeof Worker !== "undefined" && target instanceof Worker) || (typeof WorkerGlobalScope !== "undefined" && target instanceof WorkerGlobalScope);
         if (this.__isWorker) {
-            origin = ""
+            targetOrigin = ""
             this.__receiver = target;
             this.__broadcast = target;
         } else {
@@ -78,7 +81,7 @@ class WorkerMessage {
             this.__broadcast = inIframe ? target.parent : target;
         }
 
-        this.__origin = origin;
+        this.__origin = targetOrigin;
         this.__messagePromise = new Promise((resolve, reject) => {
             resolvePromise = resolve
         });
@@ -87,6 +90,7 @@ class WorkerMessage {
             clearTimeout(timer)
         }
         this.__receiver.addEventListener("message", messageHandler, false);
+        broadLoaded()
     }
     /**
      * 发送请求消息，并等待响应
@@ -108,7 +112,7 @@ class WorkerMessage {
      * 发送普通消息
      * @param {any} message 消息内容
      * @param {Transferable} [transfer=undefined] 
-     * @param {string} [targetOrigin=this.__origin] 默认使用构造函数传入的 origin 值
+     * @param {string} [targetOrigin=this.__origin] 默认使用构造函数传入的 targetOrigin 值
      */
     postMessage(message, transfer, targetOrigin = this.__origin) {
         if (this.__isWorker) {
