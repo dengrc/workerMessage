@@ -11,17 +11,30 @@ class WorkerMessage extends MessageBase {
      */
     constructor(target, targetOrigin = "*") {
         super()
-        const channel = new MessageChannel();
-        let init = performance.now();
         this.__def = new Promise((resolve) => {
-            channel.port1.onmessage = (e) => {
-                resolve(channel.port1)
-                if (e.data !== init)
-                    this.__onMessage(e)
-            }
+            const handler = (e) => {
+                if (targetOrigin !== "" && targetOrigin !== "*" && e.origin !== targetOrigin) {
+                    return
+                }
+                if (e.ports && e.ports.length) {
+                    const port = e.ports[0];
+                    port.onmessage = (e) => {
+                        this.__onMessage(e)
+                    };
+                    resolve(port);
+                    this.postMessage(e.data)
+                }
+            };
+            target.addEventListener("message", handler, false)
         })
 
-        target instanceof Worker ? target.postMessage(init, [channel.port2]) : target.postMessage(init, targetOrigin, [channel.port2])
+
+        this.destory = () => {
+            this.__def.then((port) => {
+                port.close()
+            })
+            target.removeEventListener("message", handler, false)
+        }
     }
 }
 

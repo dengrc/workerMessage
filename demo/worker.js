@@ -1,5 +1,5 @@
 //WebWorker
-importScripts("../index.inworker.js")
+importScripts("../worker.js")
 const message = new WorkerMessage(self);
 
 message.onRequestMessage = function (message, resolve, reject) {

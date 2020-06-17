@@ -21,6 +21,10 @@
 
     innerIframe.addEventListener("load", (e) => {
         const message = new WorkerMessage(innerIframe.contentWindow);
+        message.onMessage = (e) => {
+            console.log(e)
+        }
+        message.postMessage("index")
         message.onRequestMessage = function (message, resolve, reject) {
             resolve(message + "; parent response")
         }

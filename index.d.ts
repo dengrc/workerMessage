@@ -36,7 +36,6 @@ export default class WorkerMessage {
      * 发送普通消息
      * @param message 消息内容
      * @param transfer 
-     * @param targetOrigin 默认使用构造函数传入的 targetOrigin 值
      */
-    postMessage(message: any, transfer?: Transferable, targetOrigin?: string):void
+    postMessage(message: any, transfer?: Transferable):void
 }

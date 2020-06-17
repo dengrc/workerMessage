@@ -1,7 +1,11 @@
 <script type="module">
-    import WorkerMessage from "../index.js";
+    import WorkerMessage from "../iframe.js";
 
     const message = new WorkerMessage(self);
+    message.onMessage = (e) => {
+        console.log(e)
+    }
+    message.postMessage("inner")
     message.onRequestMessage = function (message, resolve, reject) {
         resolve(message + "; iframe response")
     }

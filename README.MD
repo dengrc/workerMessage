@@ -34,7 +34,7 @@ npm install worker-request-message
 ### worker.js
 ```javascript
 //WebWorker
-importScripts("../index.inworker.js")
+importScripts("../worker.js")
 const message = new WorkerMessage(self);
 
 message.onRequestMessage = function (message, resolve, reject) {
@@ -74,7 +74,7 @@ message.requestMessage("to main").then((e) => {
 ### inner.html
 ```html
 <script type="module">
-    import WorkerMessage from "../index.js";
+    import WorkerMessage from "../iframe.js";
 
     const message = new WorkerMessage(self);
     message.onRequestMessage = function (message, resolve, reject) {
