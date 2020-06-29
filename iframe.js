@@ -7,9 +7,10 @@ class WorkerMessage extends MessageBase {
      * @see [Window](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage#Syntax)
      * @see [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage#Syntax)
      * @param {Window|Worker} target 用于发送或接收消息的对象 worker、iframe.contentWindow 或 iframe 里的 window
+     * @param {string} channelId
      * @param {string} [targetOrigin=*] target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
      */
-    constructor(target, targetOrigin = "*") {
+    constructor(target, channelId, targetOrigin = "*") {
         super()
         this.__def = new Promise((resolve) => {
             const handler = (e) => {
@@ -25,16 +26,17 @@ class WorkerMessage extends MessageBase {
                     this.postMessage(e.data)
                 }
             };
-            target.addEventListener("message", handler, false)
+            target.addEventListener("message", handler, false);
+            (opener || parent).postMessage(channelId, targetOrigin);
+            this.__destroy = () => {
+                target.removeEventListener("message", handler, false)
+            }
         })
+    }
 
-
-        this.destory = () => {
-            this.__def.then((port) => {
-                port.close()
-            })
-            target.removeEventListener("message", handler, false)
-        }
+    destroy() {
+        super.destroy()
+        this.__destroy && this.__destroy();
     }
 }
 

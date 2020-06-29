@@ -1,4 +1,4 @@
-<script type="module">
+<!-- <script type="module">
     import WorkerMessage from "../index.js";
 
     const worker = new Worker("./worker.js");//,{type:'module'}
@@ -13,26 +13,44 @@
     }).catch((e) => {
         console.error(e)
     })
-</script>
-
-<iframe src="./inner.html" id="innerIframe"></iframe>
+</script> -->
+<!-- 
+<iframe src="http://localhost:8000/demo/inner.html" id="innerIframe"></iframe>
 <script type="module">
     import WorkerMessage from "../index.js";
 
-    innerIframe.addEventListener("load", (e) => {
-        const message = new WorkerMessage(innerIframe.contentWindow);
-        message.onMessage = (e) => {
-            console.log(e)
-        }
-        message.postMessage("index")
-        message.onRequestMessage = function (message, resolve, reject) {
-            resolve(message + "; parent response")
-        }
+    const message = new WorkerMessage("inner.loaded");
+    message.onMessage = (e) => {
+        console.log(e)
+    }
+    message.postMessage("index")
+    message.onRequestMessage = function (message, resolve, reject) {
+        resolve(message + "; parent response")
+    }
 
-        message.requestMessage("to iframe").then((e) => {
-            console.log(e)
-        }).catch((e) => {
-            console.error(e)
-        })
-    }, false)
+    message.requestMessage("to iframe").then((e) => {
+        console.log(e)
+    }).catch((e) => {
+        console.error(e)
+    })
+</script> -->
+
+<!-- <a href="http://localhost:8001/demo/newtab.html" target="blank">new_tab</a> -->
+<script type="module">
+    import WorkerMessage from "../index.js";
+    const message = new WorkerMessage("new.tab")
+    message.onMessage = (e) => {
+        console.log(e)
+    }
+    message.postMessage("opener")
+    message.onRequestMessage = function (message, resolve, reject) {
+        resolve(message + "; opener response")
+    }
+
+    message.requestMessage("to new.tab").then((e) => {
+        console.log(e)
+    }).catch((e) => {
+        console.error(e)
+    })
+    window.open("http://localhost:8001/demo/newtab.html","new.tab",`modal=yes,top=0,left=0,toolbar=no,status=no,menubar=no,location=no,width=${screen.availWidth},height=${screen.availHeight}`)
 </script>

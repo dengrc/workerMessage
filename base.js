@@ -58,6 +58,7 @@ export default class MessageBase {
      * 结束消息监听
      */
     destroy() {
+        this.__messagePromiseMap.clear();
         this.__def.then((prot) => {
             prot.close()
         })

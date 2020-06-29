@@ -2,16 +2,16 @@
     import WorkerMessage from "../iframe.js";
 
     setTimeout(() => {
-        const message = new WorkerMessage(self, "inner.loaded");
+        const message = new WorkerMessage(self, "new.tab");
         message.onMessage = (e) => {
             console.log(e)
         }
-        message.postMessage("inner")
+        message.postMessage("new.tab")
         message.onRequestMessage = function (message, resolve, reject) {
-            resolve(message + "; iframe response")
+            resolve(message + "; new.tab response")
         }
 
-        message.requestMessage("to parent").then((e) => {
+        message.requestMessage("to opener").then((e) => {
             console.log(e)
         }).catch((e) => {
             console.error(e)

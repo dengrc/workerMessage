@@ -23,10 +23,10 @@ export default class WorkerMessage {
      * @author 邓如春 <dengrc1992@gmail.com>
      * @see [Window](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage#Syntax)
      * @see [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage#Syntax)
-     * @param target 用于发送或接收消息的对象 worker、iframe.contentWindow 或 iframe 里的 window
+     * @param {string} channelId
      * @param targetOrigin  target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
      */
-    constructor(target: Window | Worker, targetOrigin?: string)
+    constructor(channelId: string, targetOrigin?: string)
     /**
      * 发送请求消息，并等待响应
      * @param message 消息内容

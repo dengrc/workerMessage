@@ -105,7 +105,7 @@ class WorkerMessage extends MessageBase {
      * @param {Window|Worker} target 用于发送或接收消息的对象 worker、iframe.contentWindow 或 iframe 里的 window
      * @param {string} [targetOrigin=*] target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
      */
-    constructor(target, targetOrigin = "*") {
+    constructor(target, channelId, targetOrigin = "*") {
         super()
         this.__def = new Promise((resolve) => {
             const handler = (e) => {
@@ -125,11 +125,13 @@ class WorkerMessage extends MessageBase {
         })
 
 
-        this.destory = () => {
-            this.__def.then((port) => {
-                port.close()
-            })
+        this.__destroy = () => {
             target.removeEventListener("message", handler, false)
         }
+    }
+
+    destroy() {
+        super.destroy()
+        this.__destroy();
     }
 }
