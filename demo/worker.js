@@ -1,6 +1,6 @@
 //WebWorker
 importScripts("../worker.js")
-const message = new WorkerMessage(self);
+const message = new WorkerMessage();
 
 message.onRequestMessage = function (message, resolve, reject) {
     resolve(message + "; worker response")

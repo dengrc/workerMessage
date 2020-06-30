@@ -4,39 +4,32 @@ class WorkerMessage extends MessageBase {
     /**
      * 消息管理
      * @author 邓如春 <dengrc1992@gmail.com>
-     * @see [Window](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage#Syntax)
-     * @see [Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage#Syntax)
-     * @param {Window|Worker} target 用于发送或接收消息的对象 worker、iframe.contentWindow 或 iframe 里的 window
      * @param {string} channelId
      * @param {string} [targetOrigin=*] target 使用 iframe.contentWindow 时， 以防止恶意第三方窃取密码。始终提供具体的信息targetOrigin
      */
-    constructor(target, channelId, targetOrigin = "*") {
+    constructor(channelId, targetOrigin = "*") {
         super()
-        this.__def = new Promise((resolve) => {
-            const handler = (e) => {
-                if (targetOrigin !== "" && targetOrigin !== "*" && e.origin !== targetOrigin) {
-                    return
-                }
-                if (e.ports && e.ports.length) {
-                    const port = e.ports[0];
-                    port.onmessage = (e) => {
-                        this.__onMessage(e)
-                    };
-                    resolve(port);
-                    this.postMessage(e.data)
-                }
-            };
-            target.addEventListener("message", handler, false);
-            (opener || parent).postMessage(channelId, targetOrigin);
-            this.__destroy = () => {
-                target.removeEventListener("message", handler, false)
+        const target = opener || parent;
+        //Electron
+        if (target.postMessage.length == 2) {
+            const channel = new BroadcastChannel(channelId);
+            const postMessage = channel.postMessage;
+            channel.postMessage = function (object) {
+                postMessage.call(channel, JSON.parse(JSON.stringify(object)))
             }
-        })
-    }
+            channel.onmessage = (e) => {
+                this.__onMessage(e)
+            }
+            this.__def = Promise.resolve(channel);
+            return
+        }
+        const channel = new MessageChannel();
+        channel.port1.onmessage = (e) => {
+            this.__onMessage(e)
+        }
 
-    destroy() {
-        super.destroy()
-        this.__destroy && this.__destroy();
+        this.__def = Promise.resolve(channel.port1);
+        target.postMessage(channelId, targetOrigin, [channel.port2]);
     }
 }
 

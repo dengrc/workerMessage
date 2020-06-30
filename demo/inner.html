@@ -2,7 +2,7 @@
     import WorkerMessage from "../iframe.js";
 
     setTimeout(() => {
-        const message = new WorkerMessage(self, "inner.loaded");
+        const message = new WorkerMessage("inner.loaded");
         message.onMessage = (e) => {
             console.log(e)
         }

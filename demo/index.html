@@ -14,12 +14,12 @@
         console.error(e)
     })
 </script> -->
-<!-- 
-<iframe src="http://localhost:8000/demo/inner.html" id="innerIframe"></iframe>
+
+<!-- <iframe src="http://localhost:8000/demo/inner.html" id="innerIframe"></iframe>
 <script type="module">
     import WorkerMessage from "../index.js";
 
-    const message = new WorkerMessage("inner.loaded");
+    const message = new WorkerMessage(window, "inner.loaded");
     message.onMessage = (e) => {
         console.log(e)
     }
@@ -35,10 +35,12 @@
     })
 </script> -->
 
-<!-- <a href="http://localhost:8001/demo/newtab.html" target="blank">new_tab</a> -->
+<a href="javascript:window.open('http://localhost:8001/demo/newtab.html','new.tab')" target="blank">new_tab window.open</a>
+<br/>
+<a href="http://localhost:8001/demo/newtab.html" target="blank">new_tab</a>
 <script type="module">
     import WorkerMessage from "../index.js";
-    const message = new WorkerMessage("new.tab")
+    const message = new WorkerMessage(window, "new.tab")
     message.onMessage = (e) => {
         console.log(e)
     }
@@ -52,5 +54,6 @@
     }).catch((e) => {
         console.error(e)
     })
-    window.open("http://localhost:8001/demo/newtab.html","new.tab",`modal=yes,top=0,left=0,toolbar=no,status=no,menubar=no,location=no,width=${screen.availWidth},height=${screen.availHeight}`)
+    //elForm.submit()
+    //window.open("http://localhost:8001/demo/newtab.html","new.tab")//,`modal=yes,top=0,left=0,toolbar=no,status=no,menubar=no,location=no,width=${screen.availWidth},height=${screen.availHeight}`)
 </script>

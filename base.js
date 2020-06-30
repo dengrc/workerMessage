@@ -1,3 +1,4 @@
+/* eslint-disable */
 export default class MessageBase {
     constructor() {
         this.__messagePromiseMap = new Map();
