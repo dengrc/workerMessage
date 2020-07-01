@@ -9,9 +9,8 @@ class WorkerMessage extends MessageBase {
      */
     constructor(channelId, targetOrigin = "*") {
         super()
-        const target = opener || parent;
         //Electron
-        if (target.postMessage.length == 2) {
+        if (opener && opener.postMessage.length == 2) {
             const channel = new BroadcastChannel(channelId);
             const postMessage = channel.postMessage;
             channel.postMessage = function (object) {
@@ -29,7 +28,7 @@ class WorkerMessage extends MessageBase {
         }
 
         this.__def = Promise.resolve(channel.port1);
-        target.postMessage(channelId, targetOrigin, [channel.port2]);
+        (opener || parent).postMessage(channelId, targetOrigin, [channel.port2]);
     }
 }
 
