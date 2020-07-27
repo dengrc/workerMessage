@@ -1,4 +1,4 @@
-import MessageBase from "./base.js"
+﻿import MessageBase from "./base.js"
 
 class WorkerMessage extends MessageBase {
     /**
@@ -10,7 +10,7 @@ class WorkerMessage extends MessageBase {
     constructor(channelId, targetOrigin = "*") {
         super()
         //Electron
-        if (opener && opener.postMessage.length == 2) {
+        if (/Electron/.test(navigator.appVersion)) {
             const channel = new BroadcastChannel(channelId);
             const postMessage = channel.postMessage;
             channel.postMessage = function (object) {
